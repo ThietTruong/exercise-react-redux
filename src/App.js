@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import Header from './components/Header';
+import NotFound from './components/NotFound';
+import router from './router';
+import gif from './assets/data/gif.json'
+import "./assets/css/App.css"
+import { useDispatch } from 'react-redux'
+import { setData } from "./feature/gif/gifSlice"
 function App() {
+  const dispatch = useDispatch();
+  console.log("data ", gif)
+  useEffect(() => {
+    dispatch(setData(gif));
+  }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Router>
+        <div className="App">
+          <Header />
+        </div>
+        <Switch>
+          {router.map((item, index) => {
+            return (
+              <Route key={index} path={item.path} exact={item.exact} component={item.component} />
+            )
+          })}
+          <Route component={NotFound} />
+        </Switch>
+      </Router>
     </div>
   );
 }
